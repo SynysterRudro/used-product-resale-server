@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 })
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.akihfew.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -25,6 +25,7 @@ async function run() {
     try {
 
         const categoriesCollection = client.db('UsedProductResale').collection('productCategories');
+        const productsCollection = client.db('UsedProductResale').collection('products');
 
 
         // getting all categories 
@@ -33,6 +34,16 @@ async function run() {
             const query = {};
             const categories = await categoriesCollection.find(query).toArray();
             res.send(categories);
+        })
+
+        // getting product by category 
+
+        app.get('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            // console.log(id)
+            const query = { category_id: id };
+            const products = await productsCollection.find(query).toArray();
+            res.send(products);
         })
 
     }
