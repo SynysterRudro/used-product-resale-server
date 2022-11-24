@@ -26,6 +26,8 @@ async function run() {
 
         const categoriesCollection = client.db('UsedProductResale').collection('productCategories');
         const productsCollection = client.db('UsedProductResale').collection('products');
+        // This collection is for users 
+        const usersCollection = client.db('UsedProductResale').collection('users');
 
 
         // getting all categories 
@@ -44,6 +46,15 @@ async function run() {
             const query = { category_id: id };
             const products = await productsCollection.find(query).toArray();
             res.send(products);
+        })
+
+
+        // adding users to db 
+
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.send(result)
         })
 
     }
