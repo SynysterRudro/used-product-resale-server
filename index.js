@@ -57,6 +57,24 @@ async function run() {
             res.send(result)
         })
 
+
+        // getting all users 
+
+        app.get('/users', async (req, res) => {
+            const filter = req.query.role;
+            const query = {};
+            const users = await usersCollection.find(query).toArray();
+            res.send(users);
+        })
+
+        // add product 
+
+        app.post('/addproduct', async (req, res) => {
+            const user = req.body;
+            const result = await productsCollection.insertOne(user);
+            res.send(result)
+        })
+
     }
     finally {
 
